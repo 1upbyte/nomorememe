@@ -1,0 +1,11 @@
+.env
+.env.*
+!.env.example
+.git
+.github
+.venv
+__pycache__
+*.py[cod]
+api_cache.sqlite
+api_cache.sqlite-shm
+api_cache.sqlite-wal
