@@ -1,5 +1,5 @@
-quart
-pillow
-hypercorn
-httpx
-httpx-cache
+Flask>=3.0,<4.0
+Pillow>=10.0,<12.0
+requests>=2.31,<3.0
+gunicorn>=22.0,<24.0
+python-dotenv>=1.0,<2.0
