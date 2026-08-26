@@ -1,4 +1,8 @@
-env
-nomorememe
+.env
+.venv/
 api_cache.sqlite
-__pycache__
+api_cache.sqlite-shm
+api_cache.sqlite-wal
+__pycache__/
+*.py[cod]
+.DS_Store

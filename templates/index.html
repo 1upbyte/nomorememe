@@ -1,73 +1,60 @@
-<!-- Thanks to Dion for live generator idea -->
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>No More Meme Generator</title>
-  <meta name="title" content="No More Meme Generator">
-  <meta name="description" content="To use: https://nomore.pablito.tech/your_text_here" />
-  <style>
-    body {
-      background-color: #2d2d2d;
-      font-family: "Helvetica", sans-serif;
-      color: white;
-      font-size:30px}
-    h1 {font-size:60px;}
-    h2 {font-size:40px;}
-  </style>
-</head>
-<!-- <body onload="document.getElementById('output').innerText = '​'"> -->
-
-<center><h1>NO MORE GENERATOR</h1>
-
-  <div id="input-container" style="display: flex; align-items: center; border-radius: 4px; overflow: hidden; width: 50%;">
-    <input type="text" id="input" placeholder="Text here" style="margin-left:auto; width: 50%; padding: 10px; border: none; outline: none; background-color: white; font-size: 24px;">
-    <button id="button" onclick="generate_output()" style="margin-right:auto; padding: 10px; border: none; background-color: #ee93e7; font-size: 24px;">Generate!</button>
-  </div>
-  
-  <!-- <h2 id="output" style="margin-top:3%; cursor: default; pointer-events: default; display: inline-block;" onclick="copyToClipboard(this);" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';" innerText="Wow"></h2></h2> -->
-  <img id="output" src="" style="max-width: 100%; max-height: 400px; display: none; padding: 5%;">
-  <br>
-  <div style="background-color:#aa50ea; border-radius: 4px; height: 10px; width: 80%;"></div>
-
-
-<h1>TIPS:</h1>
-<p>You can use a _ character as a space.</p>
-<p>You can append <b><u>?q=differentimage</u></b> to show a different image. </p>
-<p>Avoid special characters if possible.</p>
-
-</center>
-<script>
-  const input = document.getElementById("input");
-  const button = document.getElementById("button");
-  const output = document.getElementById("output");
-
-  function generate_output() {
-    const text = input.value;
-    const url = window.location.origin;
-    let outputText = `${url}/${text}`;
-    outputText = outputText.replace(/ /g, "_")
-    output.src = outputText;
-    output.style.display = "block";
-    
-  };
-
-  function copyToClipboard(element) {
-    text = element.textContent
-    navigator.clipboard.writeText(text);
-    
-    element.innerText = "Copied!";
-  setTimeout(() => { element.innerText = text;}, 2000); // Change back after 2 seconds
-  }
-
-  input.addEventListener("keypress", function(event) {
-  if (event.key === "Enter") {
-    button.click();}
-  }); 
-
-
-</script>
-
-
-</body>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Make a No More meme with Brave Image Search.">
+    <title>No More Meme Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  </head>
+  <body>
+    <main>
+      <h1>NO MORE GENERATOR</h1>
+      <p class="subtitle">Make a no more meme. You can edit the part after the / in the URL also.</p>
+      <form id="generator">
+        <label class="sr-only" for="word">Word or phrase</label>
+        <input id="word" maxlength="80" placeholder="Text here" autocomplete="off" required>
+        <button type="submit">Generate!</button>
+      </form>
+      <p id="status" aria-live="polite"></p>
+      <section id="result" hidden>
+        <img id="output" alt="Your No More meme">
+        <a id="download" download="no-more-meme.jpg">Download meme</a>
+      </section>
+      <div class="divider"></div>
+      <section class="tips">
+        <h2>TIPS:</h2>
+        <p>You can use an underscore for a space.</p>
+        <p>Your word or phrase goes on the bottom and is sized to fit.</p>
+        <p>You can append '?q=your_search_here' to get an image different from the text.</p>
+      </section>
+    </main>
+    <script>
+      const form = document.querySelector('#generator');
+      const word = document.querySelector('#word');
+      const status = document.querySelector('#status');
+      const result = document.querySelector('#result');
+      const output = document.querySelector('#output');
+      const download = document.querySelector('#download');
+      form.addEventListener('submit', async event => {
+        event.preventDefault();
+        const text = word.value.trim();
+        if (!text) return;
+        status.textContent = 'Find an image...';
+        result.hidden = true;
+        try {
+          const memePath = encodeURIComponent(text).replace(/%20/g, '_');
+          const response = await fetch(`/${memePath}`);
+          if (!response.ok) throw new Error((await response.json()).error);
+          const url = URL.createObjectURL(await response.blob());
+          output.src = url;
+          download.href = url;
+          status.textContent = '';
+          result.hidden = false;
+        } catch (error) {
+          status.textContent = error.message || 'Could not make that meme.';
+        }
+      });
+    </script>
+  </body>
 </html>

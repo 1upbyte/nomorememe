@@ -1,12 +1,8 @@
-FROM python:3.11.3-slim
+FROM python:3.12-slim
 WORKDIR /app
-
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PORT=8000
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
+RUN pip install --no-cache-dir -r requirements.txt && apt-get update && apt-get install -y --no-install-recommends fonts-dejavu-core && rm -rf /var/lib/apt/lists/*
 COPY . .
-
-RUN mkdir -p /usr/share/fonts/truetype/
-COPY ./Impact.ttf /usr/share/fonts/truetype/Impact.ttf
-
-CMD hypercorn -b 0.0.0.0:80 web:app
+EXPOSE 8000
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "2", "app:app"]
