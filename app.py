@@ -22,6 +22,7 @@ MAX_BOTTOM_TEXT = 80
 CACHE_TTL_SECONDS = 12 * 60 * 60
 CACHE_PATH = Path(__file__).with_name("api_cache.sqlite")
 ERROR_IMAGE_PATH = Path(__file__).with_name("error.png")
+IMPACT_FONT_PATH = Path(__file__).with_name("Impact.ttf")
 load_dotenv()
 app = Flask(__name__)
 
@@ -91,7 +92,10 @@ def search_brave_images(query: str) -> list[str]:
 
 
 def meme_font(size: int) -> ImageFont.FreeTypeFont | ImageFont.ImageFont:
+    # Keep the rendered meme consistent across macOS and Docker.  The project
+    # includes Impact, so do not depend on whichever system font is available.
     for candidate in (
+        IMPACT_FONT_PATH,
         "/usr/share/fonts/truetype/dejavu/DejaVuSansCondensed-Bold.ttf",
         "/System/Library/Fonts/Supplemental/Impact.ttf",
         "/Library/Fonts/Impact.ttf",
