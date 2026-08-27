@@ -22,6 +22,7 @@ MAX_BOTTOM_TEXT = 80
 CACHE_TTL_SECONDS = 12 * 60 * 60
 CACHE_PATH = Path(__file__).with_name("api_cache.sqlite")
 ERROR_IMAGE_PATH = Path(__file__).with_name("error.png")
+LOGO_IMAGE_PATH = Path(__file__).with_name("logo.png")
 IMPACT_FONT_PATH = Path(__file__).with_name("Impact.ttf")
 load_dotenv()
 app = Flask(__name__)
@@ -195,6 +196,11 @@ def generate_response(bottom_text: str, image_query: str):
 @app.get("/")
 def index():
     return render_template("index.html")
+
+
+@app.get("/favicon.png")
+def favicon():
+    return send_file(LOGO_IMAGE_PATH, mimetype="image/png", max_age=60 * 60 * 24 * 30)
 
 
 @app.get("/api/generate")
