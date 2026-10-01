@@ -19,7 +19,7 @@ from PIL import Image, ImageDraw, ImageFont, ImageOps
 BRAVE_IMAGES_URL = "https://api.search.brave.com/res/v1/images/search"
 CANVAS_SIZE = (1200, 1200)
 MAX_BOTTOM_TEXT = 80
-CACHE_TTL_SECONDS = 12 * 60 * 60
+CACHE_TTL_SECONDS = 24 * 60 * 60 * 7  # 1 week
 CACHE_PATH = Path(__file__).with_name("api_cache.sqlite")
 ERROR_IMAGE_PATH = Path(__file__).with_name("error.png")
 LOGO_IMAGE_PATH = Path(__file__).with_name("logo.png")
